@@ -14,7 +14,6 @@ import shop.mtcoding.securityapp.model.UserRepository;
 @RequiredArgsConstructor
 @Service
 public class MyUserDetailsService implements UserDetailsService {
-
     private final UserRepository userRepository;
 
     // login + POST + FormUrlEncoded + username, password 일 때 아래 메서드가 실행
@@ -31,7 +30,5 @@ public class MyUserDetailsService implements UserDetailsService {
             // 비인증 (Authentication에 details를 못 넣음)
             return null;
         }
-
     }
-
 }

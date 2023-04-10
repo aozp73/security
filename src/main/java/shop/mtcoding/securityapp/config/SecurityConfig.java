@@ -22,22 +22,24 @@ public class SecurityConfig {
         // 2. Form 로그인 설정
         http.formLogin()
                 .loginPage("/loginForm")
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .loginProcessingUrl("/login") // POST + X-WWW-Form-urlEncoded
                 // .defaultSuccessUrl("/")
                 .successHandler((eq, resp, authentication) -> {
                     System.out.println("디버그 : 로그인이 완료되었습니다");
                     resp.sendRedirect("/");
                 })
-                .failureHandler((req, resp, ex) -> {
-                    System.out.println("디버그 : 로그인 실패 -> " + ex.getMessage());
+                .failureHandler((req, resp, exception) -> {
+                    System.out.println("디버그 : 로그인 실패 -> " + exception.getMessage());
                 });
 
         // 3. 인증, 권한 필터 설정
         http.authorizeRequests(
                 authroize -> authroize.antMatchers("/users/**").authenticated()
-                        .antMatchers("/manager/**").hasRole("MANAGER")
-                        .antMatchers("/admin/**")
+                        .antMatchers("/manager/**")
                         .access("hasRole('ADMIN') or hasRole('MANAGER')")
+                        .antMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll());
 
         return http.build();
